@@ -1,0 +1,27 @@
+# Python virtual environment
+backend/venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Django database and environment
+*.sqlite3
+.env
+staticfiles/
+media/
+
+# Angular
+frontend/node_modules/
+frontend/.angular/
+frontend/dist/
+frontend/coverage/
+
+# Editors
+.vscode/
+.idea/
+
+# Operating system
+.DS_Store
+Thumbs.db

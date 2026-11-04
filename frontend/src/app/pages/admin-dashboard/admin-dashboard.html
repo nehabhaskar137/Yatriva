@@ -1,0 +1,251 @@
+
+<div class="dashboard">
+
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div>
+      <h1>YATRIVA<span>.</span></h1>
+      <p>Travel Management Dashboard</p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/" class="home-link">Visit Website ↗</a>
+      <button class="logout-btn" (click)="logout()">Logout ↗</button>
+    </div>
+  </header>
+
+  <!-- Welcome Section -->
+  <section class="welcome-section">
+    <p class="eyebrow">ADMINISTRATION</p>
+    <h2>Welcome to your dashboard.</h2>
+    <p>Manage your customer enquiries and travel requests in one place.</p>
+  </section>
+
+  <!-- Statistics -->
+  <section class="stats-grid">
+
+    <div class="stat-card">
+      <p>Total Enquiries</p>
+      <h3>{{ enquiries.length }}</h3>
+    </div>
+
+    <div class="stat-card">
+      <p>Pending</p>
+      <h3>{{ getStatusCount('Pending') }}</h3>
+    </div>
+
+    <div class="stat-card">
+      <p>Contacted</p>
+      <h3>{{ getStatusCount('Contacted') }}</h3>
+    </div>
+
+    <div class="stat-card">
+      <p>Confirmed</p>
+      <h3>{{ getStatusCount('Confirmed') }}</h3>
+    </div>
+
+  </section>
+
+  <!-- Enquiries Section -->
+  <section class="enquiries-section">
+
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">CUSTOMER MANAGEMENT</p>
+        <h2>Travel enquiries</h2>
+      </div>
+
+      <button (click)="loadEnquiries()">Refresh ↻</button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Search by customer name or destination..."
+      />
+    </div>
+
+    <!-- Empty State -->
+    <div
+      *ngIf="filteredEnquiries.length === 0"
+      class="empty-state"
+    >
+      <h3>No enquiries found</h3>
+      <p>
+        {{ searchText
+          ? 'No matching customer or destination found.'
+          : 'Customer travel requests will appear here.' }}
+      </p>
+    </div>
+
+    <!-- Enquiry Table -->
+    <div
+      class="table-wrapper"
+      *ngIf="filteredEnquiries.length > 0"
+    >
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Destination</th>
+            <th>Travel Date</th>
+            <th>Travellers</th>
+            <th>Budget</th>
+            <th>Status</th>
+            <th>Update Status</th>
+            <th>Details</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let enquiry of filteredEnquiries">
+
+            <td>
+              <strong>{{ enquiry.name }}</strong>
+              <small>{{ enquiry.email }}</small>
+            </td>
+
+            <td>{{ enquiry.destination }}</td>
+            <td>{{ enquiry.travel_date }}</td>
+            <td>{{ enquiry.travellers }}</td>
+            <td>{{ enquiry.budget }}</td>
+
+            <td>
+              <span
+                class="status"
+                [class.pending]="enquiry.status === 'Pending'"
+                [class.contacted]="enquiry.status === 'Contacted'"
+                [class.confirmed]="enquiry.status === 'Confirmed'"
+              >
+                {{ enquiry.status }}
+              </span>
+            </td>
+
+            <td>
+              <select
+                [(ngModel)]="enquiry.status"
+                (change)="updateStatus(enquiry)"
+                class="status-select"
+              >
+                <option value="Pending">Pending</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Confirmed">Confirmed</option>
+              </select>
+            </td>
+
+            <td>
+              <button
+                class="view-btn"
+                (click)="viewDetails(enquiry)"
+              >
+                View Details
+              </button>
+            </td>
+
+            <td>
+              <button
+                class="delete-btn"
+                (click)="deleteEnquiry(enquiry)"
+              >
+                Delete
+              </button>
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>
+
+<!-- Enquiry Details Popup -->
+<div
+  class="modal-overlay"
+  *ngIf="selectedEnquiry"
+  (click)="closeDetails()"
+>
+  <div
+    class="details-modal"
+    (click)="$event.stopPropagation()"
+  >
+
+    <div class="modal-header">
+      <div>
+        <p class="eyebrow">CUSTOMER INFORMATION</p>
+        <h2>Enquiry Details</h2>
+      </div>
+
+      <button
+        class="close-btn"
+        (click)="closeDetails()"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="modal-content">
+
+      <div class="detail-item">
+        <span>Customer Name</span>
+        <strong>{{ selectedEnquiry.name }}</strong>
+      </div>
+
+      <div class="detail-item">
+        <span>Email Address</span>
+        <strong>{{ selectedEnquiry.email }}</strong>
+      </div>
+
+      <div class="detail-item">
+        <span>Destination</span>
+        <strong>{{ selectedEnquiry.destination }}</strong>
+      </div>
+
+      <div class="detail-item">
+        <span>Travel Date</span>
+        <strong>{{ selectedEnquiry.travel_date }}</strong>
+      </div>
+
+      <div class="detail-item">
+        <span>Number of Travellers</span>
+        <strong>{{ selectedEnquiry.travellers }}</strong>
+      </div>
+
+      <div class="detail-item">
+        <span>Budget</span>
+        <strong>{{ selectedEnquiry.budget }}</strong>
+      </div>
+
+      <div class="detail-item">
+        <span>Current Status</span>
+        <strong>{{ selectedEnquiry.status }}</strong>
+      </div>
+
+      <div class="detail-item full-width">
+        <span>Customer Message</span>
+        <p>{{ selectedEnquiry.message || 'No message provided.' }}</p>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button
+        class="close-modal-btn"
+        (click)="closeDetails()"
+      >
+        Close
+      </button>
+    </div>
+
+  </div>
+</div>
