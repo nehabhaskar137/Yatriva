@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 
 import { Home } from './app/pages/home/home';
@@ -24,6 +25,12 @@ export const routes: Routes = [
 
   {
     path: 'admin-dashboard',
+    component: AdminDashboard
+  },
+
+  // Enquiries page
+  {
+    path: 'enquiries',
     component: AdminDashboard
   },
 

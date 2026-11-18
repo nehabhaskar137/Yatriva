@@ -1,186 +1,330 @@
 
-<div class="dashboard">
+<div class="dashboard" [class.dark-mode]="isDarkMode">
 
-  <!-- Header -->
-  <header class="dashboard-header">
-    <div>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <div class="sidebar-brand">
       <h1>YATRIVA<span>.</span></h1>
-      <p>Travel Management Dashboard</p>
+      <p>TRAVEL MANAGEMENT</p>
     </div>
 
-    <div class="header-actions">
-      <a routerLink="/" class="home-link">Visit Website ↗</a>
-      <button class="logout-btn" (click)="logout()">Logout ↗</button>
-    </div>
-  </header>
+    <div class="sidebar-menu">
+      <p class="menu-label">WORKSPACE</p>
 
-  <!-- Welcome Section -->
-  <section class="welcome-section">
-    <p class="eyebrow">ADMINISTRATION</p>
-    <h2>Welcome to your dashboard.</h2>
-    <p>Manage your customer enquiries and travel requests in one place.</p>
-  </section>
+      <a routerLink="/admin-dashboard" class="menu-item active">
+        <span>▦</span>
+        Dashboard
+      </a>
 
-  <!-- Statistics -->
-  <section class="stats-grid">
-
-    <div class="stat-card">
-      <p>Total Enquiries</p>
-      <h3>{{ enquiries.length }}</h3>
+      <!-- Smooth Enquiries Navigation -->
+      <a
+        href="#"
+        (click)="scrollToEnquiries($event)"
+        class="menu-item"
+      >
+        <span>✉</span>
+        Enquiries
+      </a>
     </div>
 
-    <div class="stat-card">
-      <p>Pending</p>
-      <h3>{{ getStatusCount('Pending') }}</h3>
-    </div>
-
-    <div class="stat-card">
-      <p>Contacted</p>
-      <h3>{{ getStatusCount('Contacted') }}</h3>
-    </div>
-
-    <div class="stat-card">
-      <p>Confirmed</p>
-      <h3>{{ getStatusCount('Confirmed') }}</h3>
-    </div>
-
-  </section>
-
-  <!-- Enquiries Section -->
-  <section class="enquiries-section">
-
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">CUSTOMER MANAGEMENT</p>
-        <h2>Travel enquiries</h2>
+    <div class="sidebar-bottom">
+      <div class="admin-profile">
+        <div class="profile-avatar">A</div>
+        <div>
+          <strong>Administrator</strong>
+          <small>Yatriva Admin</small>
+        </div>
       </div>
 
-      <button (click)="loadEnquiries()">Refresh ↻</button>
+      <button class="sidebar-logout" (click)="logout()">
+        ↗ Logout
+      </button>
     </div>
 
-    <!-- Search -->
-    <div class="search-box">
-      <input
-        type="text"
-        [(ngModel)]="searchText"
-        placeholder="Search by customer name or destination..."
-      />
-    </div>
+  </aside>
 
-    <!-- Empty State -->
-    <div
-      *ngIf="filteredEnquiries.length === 0"
-      class="empty-state"
-    >
-      <h3>No enquiries found</h3>
-      <p>
-        {{ searchText
-          ? 'No matching customer or destination found.'
-          : 'Customer travel requests will appear here.' }}
-      </p>
-    </div>
 
-    <!-- Enquiry Table -->
-    <div
-      class="table-wrapper"
-      *ngIf="filteredEnquiries.length > 0"
-    >
+  <!-- Main Content -->
+  <main class="main-content">
 
-      <table>
+    <!-- Topbar -->
+    <header class="topbar">
 
-        <thead>
-          <tr>
-            <th>Customer</th>
-            <th>Destination</th>
-            <th>Travel Date</th>
-            <th>Travellers</th>
-            <th>Budget</th>
-            <th>Status</th>
-            <th>Update Status</th>
-            <th>Details</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
+      <div>
+        <p class="topbar-label">WORKSPACE / OVERVIEW</p>
+        <h2>Dashboard</h2>
+      </div>
 
-        <tbody>
+      <div class="topbar-actions">
 
-          <tr *ngFor="let enquiry of filteredEnquiries">
+        <button
+          class="theme-toggle"
+          (click)="toggleTheme()"
+          [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+        >
+          {{ isDarkMode ? '☀ Light Mode' : '☾ Dark Mode' }}
+        </button>
 
-            <td>
-              <strong>{{ enquiry.name }}</strong>
-              <small>{{ enquiry.email }}</small>
-            </td>
+        <a routerLink="/" class="website-link">
+          Visit Website ↗
+        </a>
 
-            <td>{{ enquiry.destination }}</td>
-            <td>{{ enquiry.travel_date }}</td>
-            <td>{{ enquiry.travellers }}</td>
-            <td>{{ enquiry.budget }}</td>
+      </div>
 
-            <td>
-              <span
-                class="status"
-                [class.pending]="enquiry.status === 'Pending'"
-                [class.contacted]="enquiry.status === 'Contacted'"
-                [class.confirmed]="enquiry.status === 'Confirmed'"
-              >
-                {{ enquiry.status }}
-              </span>
-            </td>
+    </header>
 
-            <td>
-              <select
-                [(ngModel)]="enquiry.status"
-                (change)="updateStatus(enquiry)"
-                class="status-select"
-              >
-                <option value="Pending">Pending</option>
-                <option value="Contacted">Contacted</option>
-                <option value="Confirmed">Confirmed</option>
-              </select>
-            </td>
 
-            <td>
-              <button
-                class="view-btn"
-                (click)="viewDetails(enquiry)"
-              >
-                View Details
-              </button>
-            </td>
+    <!-- Welcome -->
+    <section class="welcome-section">
 
-            <td>
-              <button
-                class="delete-btn"
-                (click)="deleteEnquiry(enquiry)"
-              >
-                Delete
-              </button>
-            </td>
+      <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h2>Welcome back.</h2>
+        <p>
+          Here's what's happening with your travel enquiries today.
+        </p>
+      </div>
 
-          </tr>
+      <div class="welcome-decoration">
+        <span>Y</span>
+      </div>
 
-        </tbody>
+    </section>
 
-      </table>
 
-    </div>
+    <!-- Statistics -->
+    <section class="stats-grid">
 
-  </section>
+      <div class="stat-card total-card">
+        <div class="stat-top">
+          <span>Total Enquiries</span>
+          <span class="stat-icon">✉</span>
+        </div>
+        <h3>{{ enquiries.length }}</h3>
+        <p>All customer requests</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Pending</span>
+          <span class="stat-icon pending-icon">◷</span>
+        </div>
+        <h3>{{ getStatusCount('Pending') }}</h3>
+        <p>Awaiting response</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Contacted</span>
+          <span class="stat-icon contacted-icon">↗</span>
+        </div>
+        <h3>{{ getStatusCount('Contacted') }}</h3>
+        <p>Customers contacted</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Confirmed</span>
+          <span class="stat-icon confirmed-icon">✓</span>
+        </div>
+        <h3>{{ getStatusCount('Confirmed') }}</h3>
+        <p>Confirmed requests</p>
+      </div>
+
+    </section>
+
+
+    <!-- Enquiries -->
+    <section class="enquiries-section" id="enquiries">
+
+      <div class="section-heading">
+
+        <div>
+          <p class="eyebrow">CUSTOMER MANAGEMENT</p>
+          <h2>Travel enquiries</h2>
+          <p class="section-subtitle">
+            Manage and track your customer travel requests.
+          </p>
+        </div>
+
+        <button class="refresh-btn" (click)="loadEnquiries()">
+          ↻ Refresh
+        </button>
+
+      </div>
+
+
+      <!-- Loading Message -->
+      <div *ngIf="isLoading" class="empty-state">
+        <h3>Loading enquiries...</h3>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="!isLoading && loadError" class="empty-state">
+        <h3>{{ loadError }}</h3>
+        <button class="refresh-btn" (click)="loadEnquiries()">
+          Try Again
+        </button>
+      </div>
+
+
+      <!-- Search -->
+      <div class="table-toolbar" *ngIf="!isLoading && !loadError">
+
+        <div class="search-box">
+          <span>⌕</span>
+
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            placeholder="Search customer or destination..."
+          />
+        </div>
+
+        <span class="results-count">
+          {{ filteredEnquiries.length }} enquiries
+        </span>
+
+      </div>
+
+
+      <!-- Empty State -->
+      <div
+        *ngIf="!isLoading && !loadError && filteredEnquiries.length === 0"
+        class="empty-state"
+      >
+        <div class="empty-icon">✉</div>
+        <h3>No enquiries found</h3>
+        <p>
+          {{ searchText
+            ? 'No matching customer or destination found.'
+            : 'Customer travel requests will appear here.' }}
+        </p>
+      </div>
+
+
+      <!-- Enquiry Table -->
+      <div
+        class="table-wrapper"
+        *ngIf="!isLoading && !loadError && filteredEnquiries.length > 0"
+      >
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>CUSTOMER</th>
+              <th>DESTINATION</th>
+              <th>TRAVEL DATE</th>
+              <th>TRAVELLERS</th>
+              <th>BUDGET</th>
+              <th>STATUS</th>
+              <th>UPDATE</th>
+              <th>DETAILS</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let enquiry of filteredEnquiries">
+
+              <td>
+                <div class="customer-cell">
+                  <div class="customer-avatar">
+                    {{ enquiry.name.charAt(0).toUpperCase() }}
+                  </div>
+
+                  <div>
+                    <strong>{{ enquiry.name }}</strong>
+                    <small>{{ enquiry.email }}</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>{{ enquiry.destination }}</td>
+              <td>{{ enquiry.travel_date }}</td>
+              <td>{{ enquiry.travellers }}</td>
+              <td>{{ enquiry.budget }}</td>
+
+              <td>
+                <span
+                  class="status"
+                  [class.pending]="enquiry.status === 'Pending'"
+                  [class.contacted]="enquiry.status === 'Contacted'"
+                  [class.confirmed]="enquiry.status === 'Confirmed'"
+                >
+                  {{ enquiry.status }}
+                </span>
+              </td>
+
+              <td>
+                <select
+                  [(ngModel)]="enquiry.status"
+                  (change)="updateStatus(enquiry)"
+                  class="status-select"
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Contacted">Contacted</option>
+                  <option value="Confirmed">Confirmed</option>
+                </select>
+              </td>
+
+              <td>
+                <button
+                  class="view-btn"
+                  (click)="viewDetails(enquiry)"
+                >
+                  View
+                </button>
+              </td>
+
+              <td>
+                <button
+                  class="delete-btn"
+                  (click)="deleteEnquiry(enquiry)"
+                >
+                  Delete
+                </button>
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <p>© 2026 YATRIVA. Travel beautifully.</p>
+      <span>ADMIN PORTAL</span>
+    </footer>
+
+  </main>
 
 </div>
 
-<!-- Enquiry Details Popup -->
+
+<!-- Enquiry Details Modal -->
 <div
   class="modal-overlay"
   *ngIf="selectedEnquiry"
   (click)="closeDetails()"
 >
+
   <div
     class="details-modal"
     (click)="$event.stopPropagation()"
   >
 
     <div class="modal-header">
+
       <div>
         <p class="eyebrow">CUSTOMER INFORMATION</p>
         <h2>Enquiry Details</h2>
@@ -192,7 +336,9 @@
       >
         ×
       </button>
+
     </div>
+
 
     <div class="modal-content">
 
@@ -233,19 +379,25 @@
 
       <div class="detail-item full-width">
         <span>Customer Message</span>
-        <p>{{ selectedEnquiry.message || 'No message provided.' }}</p>
+        <p>
+          {{ selectedEnquiry.message || 'No message provided.' }}
+        </p>
       </div>
 
     </div>
 
+
     <div class="modal-footer">
+
       <button
         class="close-modal-btn"
         (click)="closeDetails()"
       >
         Close
       </button>
+
     </div>
 
   </div>
+
 </div>
