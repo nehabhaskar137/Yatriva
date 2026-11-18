@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class EnquiryService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api/enquiries/';
+  private apiUrl = 'https://nehabhaskar.pythonanywhere.com/api/enquiries/';
 
   constructor(private http: HttpClient) {}
 
@@ -35,11 +35,10 @@ export class EnquiryService {
     );
   }
 
-  // Delete a travel enquiry
+  // Delete an enquiry
   deleteEnquiry(id: number): Observable<any> {
     return this.http.delete(
       `${this.apiUrl}delete/${id}/`
     );
   }
-
 }

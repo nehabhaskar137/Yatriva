@@ -17,7 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Attach admin token to other enquiry API requests
   if (
     token &&
-    req.url.startsWith('http://127.0.0.1:8000/api/enquiries/')
+    req.url.startsWith('https://nehabhaskar.pythonanywhere.com/api/enquiries/')
   ) {
     const authRequest = req.clone({
       setHeaders: {

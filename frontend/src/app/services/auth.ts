@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
@@ -7,7 +8,7 @@ import { Observable, tap } from 'rxjs';
 })
 export class Auth {
 
-  private apiUrl = 'http://127.0.0.1:8000/api/token/';
+  private apiUrl = 'https://nehabhaskar.pythonanywhere.com/api/token/';
 
   constructor(private http: HttpClient) {}
 
